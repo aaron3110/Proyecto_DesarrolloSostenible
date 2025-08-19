@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Ejemplo - Consumo Sostenible Digital</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .form-header p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .radio-item input[type="radio"] {
+            width: auto;
+        }
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+        }
+        .likert-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        .likert-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .likert-option input[type="radio"] {
+            width: auto;
+        }
+        .likert-option label {
+            font-size: 12px;
+            text-align: center;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.3s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        .privacy-notice {
+            background: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #1976d2;
+        }
+        .required {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Encuesta: Consumo Sostenible Digital en Costa Rica</h1>
+            <p>Tu opinión es importante para entender cómo las diferentes generaciones perciben y practican el consumo sostenible en el ámbito digital.</p>
+        </div>
+
+        <div class="privacy-notice">
+            <strong>Aviso de Privacidad:</strong> Esta encuesta es anónima y los datos se utilizarán únicamente para fines académicos. La participación es voluntaria y puedes dejar de responder en cualquier momento.
+        </div>
+
+        <form id="surveyForm">
+            <!-- Información Demográfica -->
+            <div class="form-group">
+                <label for="generation">¿A qué generación perteneces? <span class="required">*</span></label>
+                <select id="generation" name="generation" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="genx">Generación X (1965-1980)</option>
+                    <option value="millennial">Millennial (1981-1996)</option>
+                    <option value="centennial">Centennial (1997-2012)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="age">¿Cuál es tu rango de edad? <span class="required">*</span></label>
+                <select id="age" name="age" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="18-25">18-25 años</option>
+                    <option value="26-35">26-35 años</option>
+                    <option value="36-45">36-45 años</option>
+                    <option value="46-55">46-55 años</option>
+                    <option value="56+">56+ años</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="province">¿En qué provincia de Costa Rica vives? <span class="required">*</span></label>
+                <select id="province" name="province" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="san-jose">San José</option>
+                    <option value="alajuela">Alajuela</option>
+                    <option value="cartago">Cartago</option>
+                    <option value="heredia">Heredia</option>
+                    <option value="guanacaste">Guanacaste</option>
+                    <option value="puntarenas">Puntarenas</option>
+                    <option value="limon">Limón</option>
+                </select>
+            </div>
+
+            <!-- Consumo Digital -->
+            <div class="form-group">
+                <label>¿Cuántas horas al día usas redes sociales? <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="social1" name="social_hours" value="0-1" required>
+                        <label for="social1">0-1 horas</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="social2" name="social_hours" value="2-3" required>
+                        <label for="social2">2-3 horas</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="social3" name="social_hours" value="4-5" required>
+                        <label for="social3">4-5 horas</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="social4" name="social_hours" value="6+" required>
+                        <label for="social4">6+ horas</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Qué plataformas digitales usas más? (Selecciona todas las que apliquen)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="facebook" name="platforms" value="facebook">
+                        <label for="facebook">Facebook</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instagram" name="platforms" value="instagram">
+                        <label for="instagram">Instagram</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="whatsapp" name="platforms" value="whatsapp">
+                        <label for="whatsapp">WhatsApp</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="tiktok" name="platforms" value="tiktok">
+                        <label for="tiktok">TikTok</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="youtube" name="platforms" value="youtube">
+                        <label for="youtube">YouTube</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="twitter" name="platforms" value="twitter">
+                        <label for="twitter">Twitter/X</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sostenibilidad -->
+            <div class="form-group">
+                <label>¿Consideras el impacto ambiental al hacer compras online?</label>
+                <div class="likert-scale">
+                    <div class="likert-option">
+                        <input type="radio" id="env1" name="environmental_consideration" value="1">
+                        <label for="env1">Nunca</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="env2" name="environmental_consideration" value="2">
+                        <label for="env2">Raramente</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="env3" name="environmental_consideration" value="3">
+                        <label for="env3">A veces</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="env4" name="environmental_consideration" value="4">
+                        <label for="env4">Frecuentemente</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="env5" name="environmental_consideration" value="5">
+                        <label for="env5">Siempre</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Prefieres marcas que se promocionan como sostenibles?</label>
+                <div class="likert-scale">
+                    <div class="likert-option">
+                        <input type="radio" id="brands1" name="sustainable_brands" value="1">
+                        <label for="brands1">Totalmente en desacuerdo</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="brands2" name="sustainable_brands" value="2">
+                        <label for="brands2">En desacuerdo</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="brands3" name="sustainable_brands" value="3">
+                        <label for="brands3">Neutral</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="brands4" name="sustainable_brands" value="4">
+                        <label for="brands4">De acuerdo</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="brands5" name="sustainable_brands" value="5">
+                        <label for="brands5">Totalmente de acuerdo</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>¿Pagarías más por productos sostenibles? <span class="required">*</span></label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="pay1" name="pay_more" value="no" required>
+                        <label for="pay1">No</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="pay2" name="pay_more" value="5-10" required>
+                        <label for="pay2">5-10% más</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="pay3" name="pay_more" value="11-20" required>
+                        <label for="pay3">11-20% más</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="pay4" name="pay_more" value="21+" required>
+                        <label for="pay4">21%+ más</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Influencia Digital -->
+            <div class="form-group">
+                <label>¿Te influyen los influencers en decisiones de compra?</label>
+                <div class="likert-scale">
+                    <div class="likert-option">
+                        <input type="radio" id="inf1" name="influencer_impact" value="1">
+                        <label for="inf1">Nunca</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="inf2" name="influencer_impact" value="2">
+                        <label for="inf2">Raramente</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="inf3" name="influencer_impact" value="3">
+                        <label for="inf3">A veces</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="inf4" name="influencer_impact" value="4">
+                        <label for="inf4">Frecuentemente</label>
+                    </div>
+                    <div class="likert-option">
+                        <input type="radio" id="inf5" name="influencer_impact" value="5">
+                        <label for="inf5">Siempre</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="greenwashing">¿Has detectado greenwashing (marketing ambiental engañoso) en redes sociales?</label>
+                <select id="greenwashing" name="greenwashing">
+                    <option value="">Selecciona una opción</option>
+                    <option value="yes-often">Sí, frecuentemente</option>
+                    <option value="yes-sometimes">Sí, a veces</option>
+                    <option value="unsure">No estoy seguro/a</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="comments">Comentarios adicionales (opcional)</label>
+                <textarea id="comments" name="comments" rows="4" placeholder="¿Hay algo más que te gustaría compartir sobre tu experiencia con el consumo sostenible digital?"></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="consent" name="consent" required>
+                    <label for="consent">Acepto que mis respuestas se utilicen para fines académicos <span class="required">*</span></label>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Enviar Encuesta</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Recopilar datos del formulario
+            const formData = new FormData(this);
+            const data = {};
+            
+            // Datos simples
+            for (let [key, value] of formData.entries()) {
+                if (key !== 'platforms') {
+                    data[key] = value;
+                }
+            }
+            
+            // Plataformas seleccionadas
+            const platforms = [];
+            document.querySelectorAll('input[name="platforms"]:checked').forEach(checkbox => {
+                platforms.push(checkbox.value);
+            });
+            data.platforms = platforms;
+            
+            // Simular envío de datos
+            alert('¡Gracias por tu participación! En una implementación real, estos datos se enviarían a Google Forms o una base de datos.');
+            
+            console.log('Datos de la encuesta:', data);
+            
+            // Aquí integrarías con Google Forms o tu sistema de almacenamiento
+            // Por ejemplo, usando fetch para enviar a Google Forms:
+            // fetch('https://docs.google.com/forms/d/e/TU_FORM_ID/formResponse', {
+            //     method: 'POST',
+            //     body: formData
+            // });
+        });
+    </script>
+</body>
+</html>
