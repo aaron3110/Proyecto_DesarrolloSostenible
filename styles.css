@@ -566,6 +566,54 @@ body {
     opacity: 0.8;
 }
 
+/* Footer responsive para móviles */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.5rem;
+    }
+    
+    .footer-section {
+        padding: 0 1rem;
+    }
+    
+    .footer-section ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .footer-section li {
+        text-align: center;
+    }
+    
+    .footer {
+        padding: 2rem 0 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-content {
+        gap: 1rem;
+    }
+    
+    .footer-section {
+        padding: 0 0.5rem;
+    }
+    
+    .footer-section h3,
+    .footer-section h4 {
+        font-size: 1.1rem;
+    }
+    
+    .footer-section p,
+    .footer-section li {
+        font-size: 0.9rem;
+    }
+}
+
 /* Objetivos Section */
 .objetivos {
     padding: 100px 0;
