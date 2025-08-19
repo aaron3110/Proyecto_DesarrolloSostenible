@@ -65,7 +65,7 @@ function initializeSurveyResults() {
     console.log('Inicializando resultados de encuesta con', totalResponses, 'respuestas');
 }
 
-// Función simple para crear gráficos de pastel
+// Función simple para crear gráficos de pastel responsivos
 function createPieChart(chartId, data) {
     const chart = document.getElementById(chartId);
     if (!chart) return;
@@ -73,16 +73,20 @@ function createPieChart(chartId, data) {
     // Limpiar el gráfico
     chart.innerHTML = '';
     
+    // Obtener el tamaño del contenedor para hacer el gráfico responsivo
+    const containerWidth = chart.offsetWidth || 200;
+    const chartSize = Math.min(containerWidth, 200); // Máximo 200px, mínimo el ancho del contenedor
+    
     // Crear el SVG
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', '200');
-    svg.setAttribute('height', '200');
-    svg.setAttribute('viewBox', '0 0 200 200');
+    svg.setAttribute('width', chartSize);
+    svg.setAttribute('height', chartSize);
+    svg.setAttribute('viewBox', `0 0 ${chartSize} ${chartSize}`);
     
     // Calcular el centro y radio
-    const centerX = 100;
-    const centerY = 100;
-    const radius = 80;
+    const centerX = chartSize / 2;
+    const centerY = chartSize / 2;
+    const radius = (chartSize * 0.4); // 40% del tamaño del gráfico
     
     let currentAngle = 0;
     
@@ -115,28 +119,30 @@ function createPieChart(chartId, data) {
         path.setAttribute('d', pathData);
         path.setAttribute('fill', slice.color);
         path.setAttribute('stroke', 'white');
-        path.setAttribute('stroke-width', '2');
+        path.setAttribute('stroke-width', Math.max(1, chartSize / 100)); // Stroke responsivo
         
         svg.appendChild(path);
         
-        // Agregar el porcentaje como texto
-        const textAngle = currentAngle + (angle / 2);
-        const textRad = (textAngle - 90) * Math.PI / 180;
-        const textRadius = radius * 0.6;
-        const textX = centerX + textRadius * Math.cos(textRad);
-        const textY = centerY + textRadius * Math.sin(textRad);
-        
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', textX);
-        text.setAttribute('y', textY);
-        text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('dominant-baseline', 'middle');
-        text.setAttribute('fill', 'white');
-        text.setAttribute('font-size', '12');
-        text.setAttribute('font-weight', 'bold');
-        text.textContent = `${slice.percentage}%`;
-        
-        svg.appendChild(text);
+        // Agregar el porcentaje como texto solo si el slice es suficientemente grande
+        if (angle > 15) { // Solo mostrar texto si el slice es mayor a 15 grados
+            const textAngle = currentAngle + (angle / 2);
+            const textRad = (textAngle - 90) * Math.PI / 180;
+            const textRadius = radius * 0.6;
+            const textX = centerX + textRadius * Math.cos(textRad);
+            const textY = centerY + textRadius * Math.sin(textRad);
+            
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', textX);
+            text.setAttribute('y', textY);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('dominant-baseline', 'middle');
+            text.setAttribute('fill', 'white');
+            text.setAttribute('font-size', Math.max(8, chartSize / 20)); // Tamaño de fuente responsivo
+            text.setAttribute('font-weight', 'bold');
+            text.textContent = `${slice.percentage}%`;
+            
+            svg.appendChild(text);
+        }
         
         currentAngle = endAngle;
     });
@@ -223,14 +229,44 @@ function initializeAllCharts() {
 
 
 
+// Función para redimensionar gráficos cuando cambie el tamaño de la ventana
+function resizeCharts() {
+    // Redimensionar todos los gráficos existentes
+    Object.keys(chartsData).forEach(chartId => {
+        const chart = document.getElementById(chartId);
+        if (chart && chart.querySelector('svg')) {
+            createPieChart(chartId, chartsData[chartId]);
+        }
+    });
+}
+
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     initializeSurveyResults();
-    
-
     
     // Inicializar gráficos con un pequeño retraso
     setTimeout(() => {
         initializeAllCharts();
     }, 100);
+    
+    // Agregar listener para redimensionar gráficos
+    window.addEventListener('resize', debounce(resizeCharts, 250));
+    
+    // Agregar listener para orientación del dispositivo móvil
+    window.addEventListener('orientationchange', function() {
+        setTimeout(resizeCharts, 500); // Esperar a que se complete el cambio de orientación
+    });
 });
+
+// Función debounce para optimizar el redimensionamiento
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
