@@ -233,11 +233,11 @@ function createVerticalBarChart(containerId, data, options = {}) {
             generationData.values.forEach((value, categoryIndex) => {
                 const bar = document.createElement('div');
                 
-                // Usar colores fijos para cada posición
-                const colors = ['millennial', 'generacion-x', 'centennial'];
-                const colorClass = colors[categoryIndex % colors.length];
+                // Usar las clases de categorías definidas en los datos
+                const categoryClass = generationData.categories && generationData.categories[categoryIndex] ? 
+                    generationData.categories[categoryIndex].class : 'centennial';
                 
-                bar.className = `vertical-bar ${colorClass}`;
+                bar.className = `vertical-bar ${categoryClass}`;
                 
                 const height = (value / yAxisMax) * 250;
                 bar.style.height = `${height}px`;
@@ -299,33 +299,33 @@ function initializeAllCharts() {
             name: 'Centennial',
             values: [16.67, 12.70, 6.35, 0.79, 7.14],
             categories: [
-                { label: 'Algo importante', class: 'centennial' },
-                { label: 'Importante', class: 'millennial' },
-                { label: 'Muy importante', class: 'generacion-x' },
-                { label: 'Nada importante', class: 'centennial' },
-                { label: 'Poco importante', class: 'millennial' }
+                { label: 'Algo importante', class: 'color-1' },
+                { label: 'Importante', class: 'color-2' },
+                { label: 'Muy importante', class: 'color-3' },
+                { label: 'Nada importante', class: 'color-4' },
+                { label: 'Poco importante', class: 'color-5' }
             ]
         },
         {
             name: 'Millennial',
             values: [8.73, 8.73, 7.94, 1.59, 1.59],
             categories: [
-                { label: 'Algo importante', class: 'centennial' },
-                { label: 'Importante', class: 'millennial' },
-                { label: 'Muy importante', class: 'generacion-x' },
-                { label: 'Nada importante', class: 'centennial' },
-                { label: 'Poco importante', class: 'millennial' }
+                { label: 'Algo importante', class: 'color-1' },
+                { label: 'Importante', class: 'color-2' },
+                { label: 'Muy importante', class: 'color-3' },
+                { label: 'Nada importante', class: 'color-4' },
+                { label: 'Poco importante', class: 'color-5' }
             ]
         },
         {
             name: 'Generación X',
             values: [3.97, 11.11, 8.73, 2.38, 1.59],
             categories: [
-                { label: 'Algo importante', class: 'centennial' },
-                { label: 'Importante', class: 'millennial' },
-                { label: 'Muy importante', class: 'generacion-x' },
-                { label: 'Nada importante', class: 'centennial' },
-                { label: 'Poco importante', class: 'millennial' }
+                { label: 'Algo importante', class: 'color-1' },
+                { label: 'Importante', class: 'color-2' },
+                { label: 'Muy importante', class: 'color-3' },
+                { label: 'Nada importante', class: 'color-4' },
+                { label: 'Poco importante', class: 'color-5' }
             ]
         }
     ];
@@ -432,33 +432,33 @@ function initializeAllCharts() {
             name: 'Centennial',
             values: [27.78, 10.32, 3.97, 1.59, 0],
             categories: [
-                { label: 'A veces', class: 'centennial' },
-                { label: 'Casi nunca', class: 'millennial' },
-                { label: 'Casi siempre', class: 'generacion-x' },
-                { label: 'Nunca', class: 'centennial' },
-                { label: 'Siempre', class: 'millennial' }
+                { label: 'A veces', class: 'color-1' },
+                { label: 'Casi nunca', class: 'color-2' },
+                { label: 'Casi siempre', class: 'color-3' },
+                { label: 'Nunca', class: 'color-4' },
+                { label: 'Siempre', class: 'color-5' }
             ]
         },
         {
             name: 'Millennial',
             values: [19.84, 3.97, 3.17, 0.79, 0.79],
             categories: [
-                { label: 'A veces', class: 'centennial' },
-                { label: 'Casi nunca', class: 'millennial' },
-                { label: 'Casi siempre', class: 'generacion-x' },
-                { label: 'Nunca', class: 'centennial' },
-                { label: 'Siempre', class: 'millennial' }
+                { label: 'A veces', class: 'color-1' },
+                { label: 'Casi nunca', class: 'color-2' },
+                { label: 'Casi siempre', class: 'color-3' },
+                { label: 'Nunca', class: 'color-4' },
+                { label: 'Siempre', class: 'color-5' }
             ]
         },
         {
             name: 'Generación X',
             values: [16.67, 2.38, 3.97, 3.97, 0.79],
             categories: [
-                { label: 'A veces', class: 'centennial' },
-                { label: 'Casi nunca', class: 'millennial' },
-                { label: 'Casi siempre', class: 'generacion-x' },
-                { label: 'Nunca', class: 'centennial' },
-                { label: 'Siempre', class: 'millennial' }
+                { label: 'A veces', class: 'color-1' },
+                { label: 'Casi nunca', class: 'color-2' },
+                { label: 'Casi siempre', class: 'color-3' },
+                { label: 'Nunca', class: 'color-4' },
+                { label: 'Siempre', class: 'color-5' }
             ]
         }
     ];

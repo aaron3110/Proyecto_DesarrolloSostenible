@@ -1294,6 +1294,14 @@ body {
 .millennial { background-color: #ea4335; }
 .generacion-x { background-color: #fbbc04; }
 
+/* Colores adicionales para evitar duplicados */
+.color-1 { background-color: #87ceeb; } /* Azul cielo */
+.color-2 { background-color: #000080; } /* Azul marino */
+.color-3 { background-color: #ffa500; } /* Naranja */
+.color-4 { background-color: #800080; } /* Púrpura */
+.color-5 { background-color: #ffc0cb; } /* Rosa claro */
+.color-6 { background-color: #32cd32; } /* Verde lima */
+
 /* Gráficos de Barras Horizontales (para Gráfico 6) */
 .horizontal-bar-chart {
     width: 100%;
