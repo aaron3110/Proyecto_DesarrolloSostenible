@@ -65,179 +65,477 @@ function initializeSurveyResults() {
     console.log('Inicializando resultados de encuesta con', totalResponses, 'respuestas');
 }
 
-// Función simple para crear gráficos de pastel responsivos
-function createPieChart(chartId, data) {
-    const chart = document.getElementById(chartId);
-    if (!chart) return;
+// Función para crear gráficos de barras horizontales agrupadas (como la imagen 6)
+function createHorizontalBarChart(containerId, data, options = {}) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
     
-    // Limpiar el gráfico
-    chart.innerHTML = '';
+    // Limpiar el contenedor
+    container.innerHTML = '';
     
-    // Obtener el tamaño del contenedor para hacer el gráfico responsivo
-    const containerWidth = chart.offsetWidth || 200;
-    const chartSize = Math.min(containerWidth, 200); // Máximo 200px, mínimo el ancho del contenedor
+    // Crear la estructura del gráfico
+    const chartDiv = document.createElement('div');
+    chartDiv.className = 'horizontal-bar-chart';
     
-    // Crear el SVG
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('width', chartSize);
-    svg.setAttribute('height', chartSize);
-    svg.setAttribute('viewBox', `0 0 ${chartSize} ${chartSize}`);
+    // Título del gráfico (opcional)
+    if (options.title) {
+        const title = document.createElement('div');
+        title.className = 'chart-title';
+        title.textContent = options.title;
+        chartDiv.appendChild(title);
+    }
     
-    // Calcular el centro y radio
-    const centerX = chartSize / 2;
-    const centerY = chartSize / 2;
-    const radius = (chartSize * 0.4); // 40% del tamaño del gráfico
+    // Contenedor principal del gráfico
+    const chartArea = document.createElement('div');
+    chartArea.className = 'horizontal-chart-area';
     
-    let currentAngle = 0;
-    
-    // Crear cada slice
-    data.forEach((slice, index) => {
-        const angle = (slice.percentage / 100) * 360;
-        const endAngle = currentAngle + angle;
+    // Crear cada grupo de acciones
+    data.forEach((actionData, index) => {
+        const actionGroup = document.createElement('div');
+        actionGroup.className = 'action-group';
         
-        // Convertir ángulos a radianes
-        const startRad = (currentAngle - 90) * Math.PI / 180;
-        const endRad = (endAngle - 90) * Math.PI / 180;
+        // Etiqueta de la acción
+        const actionLabel = document.createElement('div');
+        actionLabel.className = 'action-label';
+        actionLabel.textContent = actionData.name;
         
-        // Calcular puntos del arco
-        const x1 = centerX + radius * Math.cos(startRad);
-        const y1 = centerY + radius * Math.sin(startRad);
-        const x2 = centerX + radius * Math.cos(endRad);
-        const y2 = centerY + radius * Math.sin(endRad);
+        // Contenedor de barras horizontales
+        const barsContainer = document.createElement('div');
+        barsContainer.className = 'horizontal-bars-container';
         
-        // Crear el path del slice
-        const largeArcFlag = angle > 180 ? 1 : 0;
-        const pathData = [
-            `M ${centerX} ${centerY}`,
-            `L ${x1} ${y1}`,
-            `A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}`,
-            'Z'
-        ].join(' ');
-        
-        // Crear el elemento path
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', pathData);
-        path.setAttribute('fill', slice.color);
-        path.setAttribute('stroke', 'white');
-        path.setAttribute('stroke-width', Math.max(1, chartSize / 100)); // Stroke responsivo
-        
-        svg.appendChild(path);
-        
-        // Agregar el porcentaje como texto solo si el slice es suficientemente grande
-        if (angle > 15) { // Solo mostrar texto si el slice es mayor a 15 grados
-            const textAngle = currentAngle + (angle / 2);
-            const textRad = (textAngle - 90) * Math.PI / 180;
-            const textRadius = radius * 0.6;
-            const textX = centerX + textRadius * Math.cos(textRad);
-            const textY = centerY + textRadius * Math.sin(textRad);
+        // Crear barras para cada generación
+        actionData.values.forEach((value, genIndex) => {
+            const barWrapper = document.createElement('div');
+            barWrapper.className = 'horizontal-bar-wrapper';
             
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('x', textX);
-            text.setAttribute('y', textY);
-            text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('dominant-baseline', 'middle');
-            text.setAttribute('fill', 'white');
-            text.setAttribute('font-size', Math.max(8, chartSize / 20)); // Tamaño de fuente responsivo
-            text.setAttribute('font-weight', 'bold');
-            text.textContent = `${slice.percentage}%`;
+            const bar = document.createElement('div');
+            const colors = ['#ff6b9d', '#ff8c42', '#4285f4']; // Millennial, Generación X, Centennial
+            bar.className = 'horizontal-bar';
+            bar.style.width = `${value}%`;
+            bar.style.backgroundColor = colors[genIndex];
             
-            svg.appendChild(text);
-        }
+            // Agregar porcentaje al final de la barra
+            const percentage = document.createElement('span');
+            percentage.className = 'horizontal-bar-percentage';
+            percentage.textContent = `${value}%`;
+            
+            barWrapper.appendChild(bar);
+            barWrapper.appendChild(percentage);
+            barsContainer.appendChild(barWrapper);
+        });
         
-        currentAngle = endAngle;
+        actionGroup.appendChild(actionLabel);
+        actionGroup.appendChild(barsContainer);
+        chartArea.appendChild(actionGroup);
     });
     
-    chart.appendChild(svg);
+    chartDiv.appendChild(chartArea);
+    
+    // Leyenda
+    const legend = document.createElement('div');
+    legend.className = 'horizontal-chart-legend';
+    
+    const generations = [
+        { label: 'Millennial', class: 'millennial', color: '#ff6b9d' },
+        { label: 'Generación X', class: 'generacion-x', color: '#ff8c42' },
+        { label: 'Centennial', class: 'centennial', color: '#4285f4' }
+    ];
+    
+    generations.forEach(gen => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'horizontal-legend-item';
+        
+        const colorBox = document.createElement('div');
+        colorBox.className = 'horizontal-legend-color';
+        colorBox.style.backgroundColor = gen.color;
+        
+        const text = document.createElement('div');
+        text.className = 'horizontal-legend-text';
+        text.textContent = gen.label;
+        
+        legendItem.appendChild(colorBox);
+        legendItem.appendChild(text);
+        legend.appendChild(legendItem);
+    });
+    
+    chartDiv.appendChild(legend);
+    container.appendChild(chartDiv);
+}
+
+// Función para crear gráficos de barras verticales agrupadas
+function createVerticalBarChart(containerId, data, options = {}) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    // Limpiar el contenedor
+    container.innerHTML = '';
+    
+    // Crear la estructura del gráfico
+    const chartDiv = document.createElement('div');
+    chartDiv.className = 'vertical-bar-chart';
+    
+    // Título del gráfico (opcional)
+    if (options.title) {
+        const title = document.createElement('div');
+        title.className = 'chart-title';
+        title.textContent = options.title;
+        chartDiv.appendChild(title);
+    }
+    
+    // Área del gráfico
+    const chartArea = document.createElement('div');
+    chartArea.className = 'chart-area';
+    
+    // Etiquetas del eje Y
+    const yAxisLabels = document.createElement('div');
+    yAxisLabels.className = 'y-axis-labels';
+    
+    // Crear etiquetas del eje Y (0%, 5%, 10%, 15%, 20%, 25%, 30%)
+    const maxValue = Math.max(...data.map(gen => Math.max(...gen.values)));
+    const yAxisMax = Math.ceil(maxValue / 5) * 5; // Redondear hacia arriba a múltiplo de 5
+    
+    for (let i = yAxisMax; i >= 0; i -= 5) {
+        const label = document.createElement('div');
+        label.className = 'y-axis-label';
+        label.textContent = `${i}%`;
+        yAxisLabels.appendChild(label);
+    }
+    
+    chartArea.appendChild(yAxisLabels);
+    
+    // Crear grupos de generaciones
+    data.forEach((generationData, genIndex) => {
+        const generationGroup = document.createElement('div');
+        generationGroup.className = 'generation-group';
+        
+        // Contenedor de barras
+        const barsContainer = document.createElement('div');
+        barsContainer.className = 'bars-container';
+        
+        // Crear una sola barra por generación (para gráficos simples como Sí/No)
+        // O múltiples barras para gráficos complejos
+        if (generationData.values.length === 1) {
+            // Una sola barra por generación
+            const bar = document.createElement('div');
+            bar.className = `vertical-bar ${generationData.name.toLowerCase().replace(' ', '-')}`;
+            
+            const height = (generationData.values[0] / yAxisMax) * 250;
+            bar.style.height = `${height}px`;
+            
+            const percentage = document.createElement('div');
+            percentage.className = 'bar-percentage';
+            percentage.textContent = `${generationData.values[0]}%`;
+            bar.appendChild(percentage);
+            
+            barsContainer.appendChild(bar);
+        } else {
+            // Múltiples barras por generación
+            generationData.values.forEach((value, categoryIndex) => {
+                const bar = document.createElement('div');
+                
+                // Usar colores fijos para cada posición
+                const colors = ['millennial', 'generacion-x', 'centennial'];
+                const colorClass = colors[categoryIndex % colors.length];
+                
+                bar.className = `vertical-bar ${colorClass}`;
+                
+                const height = (value / yAxisMax) * 250;
+                bar.style.height = `${height}px`;
+                
+                const percentage = document.createElement('div');
+                percentage.className = 'bar-percentage';
+                percentage.textContent = `${value}%`;
+                bar.appendChild(percentage);
+                
+                barsContainer.appendChild(bar);
+            });
+        }
+        
+        generationGroup.appendChild(barsContainer);
+        
+        // Etiqueta de la generación
+        const label = document.createElement('div');
+        label.className = 'generation-label';
+        label.textContent = generationData.name;
+        generationGroup.appendChild(label);
+        
+        chartArea.appendChild(generationGroup);
+    });
+    
+    chartDiv.appendChild(chartArea);
+    
+    // Leyenda
+    if (data[0] && data[0].categories) {
+        const legend = document.createElement('div');
+        legend.className = 'vertical-chart-legend';
+        
+        data[0].categories.forEach(category => {
+            const legendItem = document.createElement('div');
+            legendItem.className = 'vertical-legend-item';
+            
+            const colorBox = document.createElement('div');
+            colorBox.className = `vertical-legend-color ${category.class}`;
+            
+            const text = document.createElement('div');
+            text.className = 'vertical-legend-text';
+            text.textContent = category.label;
+            
+            legendItem.appendChild(colorBox);
+            legendItem.appendChild(text);
+            legend.appendChild(legendItem);
+        });
+        
+        chartDiv.appendChild(legend);
+    }
+    
+    container.appendChild(chartDiv);
 }
 
 // Función para inicializar todos los gráficos
 function initializeAllCharts() {
-    // Datos para cada gráfico
-    const chartsData = {
-        'pie-chart-1': [ // Rango de Edad
-            { percentage: 44, color: '#4285f4' },
-            { percentage: 28, color: '#ea4335' },
-            { percentage: 28, color: '#fbbc04' }
-        ],
-        'pie-chart-2': [ // Importancia de Sostenibilidad
-            { percentage: 32.8, color: '#34a853' },
-            { percentage: 29.5, color: '#fbbc04' },
-            { percentage: 22.1, color: '#9c27b0' },
-            { percentage: 10.7, color: '#ea4335' },
-            { percentage: 4.9, color: '#4285f4' }
-        ],
-        'pie-chart-3': [ // Frecuencia de Búsqueda
-            { percentage: 17.2, color: '#4285f4' },
-            { percentage: 23.8, color: '#ea4335' },
-            { percentage: 31.1, color: '#fbbc04' },
-            { percentage: 20.5, color: '#34a853' },
-            { percentage: 7.4, color: '#9c27b0' }
-        ],
-        'pie-chart-4': [ // Reconocimiento de Greenwashing
-            { percentage: 53.3, color: '#4285f4' },
-            { percentage: 46.7, color: '#ea4335' }
-        ],
-        'pie-chart-5': [ // Desafíos para Consumo Sostenible
-            { percentage: 26.2, color: '#ea4335' },
-            { percentage: 24.6, color: '#4285f4' },
-            { percentage: 23.8, color: '#9c27b0' },
-            { percentage: 11.5, color: '#34a853' },
-            { percentage: 9.8, color: '#fbbc04' },
-            { percentage: 4.1, color: '#00bcd4' }
-        ],
-        'pie-chart-6': [ // Preferencia por Productos Locales
-            { percentage: 54.1, color: '#4285f4' },
-            { percentage: 42.6, color: '#fbbc04' },
-            { percentage: 3.3, color: '#ea4335' }
-        ],
-        'pie-chart-7': [ // Disposición a Pagar Más
-            { percentage: 71.3, color: '#4285f4' },
-            { percentage: 28.7, color: '#ea4335' }
-        ],
-        'pie-chart-8': [ // Influencia de Redes Sociales
-            { percentage: 42.6, color: '#fbbc04' },
-            { percentage: 24.6, color: '#4285f4' },
-            { percentage: 15.6, color: '#ea4335' },
-            { percentage: 13.9, color: '#34a853' },
-            { percentage: 3.3, color: '#9c27b0' }
-        ],
-        'pie-chart-9': [ // Compromiso de Empresas Costarricenses
-            { percentage: 52.5, color: '#4285f4' },
-            { percentage: 47.5, color: '#ea4335' }
-        ],
-        'pie-chart-11': [ // Frecuencia de Compra Local
-            { percentage: 63.1, color: '#fbbc04' },
-            { percentage: 17.2, color: '#ea4335' },
-            { percentage: 11.5, color: '#34a853' },
-            { percentage: 6.6, color: '#4285f4' },
-            { percentage: 1.6, color: '#9c27b0' }
-        ],
-        'pie-chart-14': [ // Frecuencia de Preferencia por Marcas Sostenibles
-            { percentage: 45.1, color: '#fbbc04' },
-            { percentage: 18.9, color: '#34a853' },
-            { percentage: 18.9, color: '#9c27b0' },
-            { percentage: 10.7, color: '#ea4335' },
-            { percentage: 6.6, color: '#4285f4' }
-        ]
-    };
+    // Gráfico 1: Importancia de Sostenibilidad por Generación
+    const importanceData = [
+        {
+            name: 'Centennial',
+            values: [16.67, 12.70, 6.35, 0.79, 7.14],
+            categories: [
+                { label: 'Algo importante', class: 'centennial' },
+                { label: 'Importante', class: 'millennial' },
+                { label: 'Muy importante', class: 'generacion-x' },
+                { label: 'Nada importante', class: 'centennial' },
+                { label: 'Poco importante', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Millennial',
+            values: [8.73, 8.73, 7.94, 1.59, 1.59],
+            categories: [
+                { label: 'Algo importante', class: 'centennial' },
+                { label: 'Importante', class: 'millennial' },
+                { label: 'Muy importante', class: 'generacion-x' },
+                { label: 'Nada importante', class: 'centennial' },
+                { label: 'Poco importante', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Generación X',
+            values: [3.97, 11.11, 8.73, 2.38, 1.59],
+            categories: [
+                { label: 'Algo importante', class: 'centennial' },
+                { label: 'Importante', class: 'millennial' },
+                { label: 'Muy importante', class: 'generacion-x' },
+                { label: 'Nada importante', class: 'centennial' },
+                { label: 'Poco importante', class: 'millennial' }
+            ]
+        }
+    ];
     
-    // Crear cada gráfico
-    Object.keys(chartsData).forEach(chartId => {
-        createPieChart(chartId, chartsData[chartId]);
-    });
+    // Gráfico 2: Disposición a Pagar Más por Generación
+    const payMoreData = [
+        {
+            name: 'Centennial',
+            values: [25.45, 74.55],
+            categories: [
+                { label: 'No', class: 'centennial' },
+                { label: 'Sí', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Millennial',
+            values: [22.22, 77.78],
+            categories: [
+                { label: 'No', class: 'centennial' },
+                { label: 'Sí', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Generación X',
+            values: [37.14, 62.86],
+            categories: [
+                { label: 'No', class: 'centennial' },
+                { label: 'Sí', class: 'millennial' }
+            ]
+        }
+    ];
+    
+    // Gráfico 3: Acciones en Compras Online por Generación
+    const actionsData = [
+        {
+            name: 'Verificar certificaciones',
+            values: [44, 22, 33],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Revisar empaque',
+            values: [28, 26, 46],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Ninguna',
+            values: [29, 35, 35],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Leer reseñas',
+            values: [28, 23, 49],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        }
+    ];
+    
+    // Gráfico 4: Reconocimiento de Greenwashing por Generación
+    const greenwashingData = [
+        {
+            name: 'Centennial',
+            values: [22.22, 21.43],
+            categories: [
+                { label: 'No', class: 'centennial' },
+                { label: 'Sí', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Millennial',
+            values: [11.11, 17.46],
+            categories: [
+                { label: 'No', class: 'centennial' },
+                { label: 'Sí', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Generación X',
+            values: [13.49, 14.29],
+            categories: [
+                { label: 'No', class: 'centennial' },
+                { label: 'Sí', class: 'millennial' }
+            ]
+        }
+    ];
+    
+    // Gráfico 5: Frecuencia de Compra Local por Generación
+    const localShoppingData = [
+        {
+            name: 'Centennial',
+            values: [27.78, 10.32, 3.97, 1.59, 0],
+            categories: [
+                { label: 'A veces', class: 'centennial' },
+                { label: 'Casi nunca', class: 'millennial' },
+                { label: 'Casi siempre', class: 'generacion-x' },
+                { label: 'Nunca', class: 'centennial' },
+                { label: 'Siempre', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Millennial',
+            values: [19.84, 3.97, 3.17, 0.79, 0.79],
+            categories: [
+                { label: 'A veces', class: 'centennial' },
+                { label: 'Casi nunca', class: 'millennial' },
+                { label: 'Casi siempre', class: 'generacion-x' },
+                { label: 'Nunca', class: 'centennial' },
+                { label: 'Siempre', class: 'millennial' }
+            ]
+        },
+        {
+            name: 'Generación X',
+            values: [16.67, 2.38, 3.97, 3.97, 0.79],
+            categories: [
+                { label: 'A veces', class: 'centennial' },
+                { label: 'Casi nunca', class: 'millennial' },
+                { label: 'Casi siempre', class: 'generacion-x' },
+                { label: 'Nunca', class: 'centennial' },
+                { label: 'Siempre', class: 'millennial' }
+            ]
+        }
+    ];
+    
+    // Gráfico 6: Acciones para Demostrar Compromiso Sostenible por Categoría
+    const sustainabilityActionsData = [
+        {
+            name: 'Usar materiales reciclados',
+            values: [26, 28, 46],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Certificaciones',
+            values: [29, 27, 44],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Reducir emisiones',
+            values: [33, 20, 47],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Reportes',
+            values: [31, 29, 40],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Invertir proyectos',
+            values: [30, 29, 41],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        },
+        {
+            name: 'Economía circular',
+            values: [34, 25, 41],
+            categories: [
+                { label: 'Millennial', class: 'millennial' },
+                { label: 'Generación X', class: 'generacion-x' },
+                { label: 'Centennial', class: 'centennial' }
+            ]
+        }
+    ];
+    
+    // Crear los gráficos
+    createVerticalBarChart('chart-1', importanceData);
+    createVerticalBarChart('chart-2', payMoreData);
+    createVerticalBarChart('chart-3', actionsData);
+    createVerticalBarChart('chart-4', greenwashingData);
+    createVerticalBarChart('chart-5', localShoppingData);
+    createHorizontalBarChart('chart-6', sustainabilityActionsData);
 }
 
 
 
 // Función para redimensionar gráficos cuando cambie el tamaño de la ventana
 function resizeCharts() {
-    // Redimensionar todos los gráficos existentes
-    Object.keys(chartsData).forEach(chartId => {
-        const chart = document.getElementById(chartId);
-        if (chart && chart.querySelector('svg')) {
-            createPieChart(chartId, chartsData[chartId]);
-        }
-    });
+    // Reinicializar todos los gráficos
+    initializeAllCharts();
 }
 
 // Inicializar cuando el DOM esté listo
