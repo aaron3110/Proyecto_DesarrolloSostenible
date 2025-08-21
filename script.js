@@ -217,7 +217,18 @@ function createVerticalBarChart(containerId, data, options = {}) {
         if (generationData.values.length === 1) {
             // Una sola barra por generación
             const bar = document.createElement('div');
-            bar.className = `vertical-bar ${generationData.name.toLowerCase().replace(' ', '-')}`;
+            const generationClass = generationData.name.toLowerCase().replace(' ', '-');
+            bar.className = `vertical-bar`;
+            
+            // Aplicar color basado en la generación
+            const colorMap = {
+                'centennial': '#4285f4',
+                'millennial': '#ea4335',
+                'generacion-x': '#fbbc04',
+                'generación-x': '#fbbc04'
+            };
+            
+            bar.style.backgroundColor = colorMap[generationClass] || '#4285f4';
             
             const height = (generationData.values[0] / yAxisMax) * 250;
             bar.style.height = `${height}px`;
@@ -237,7 +248,22 @@ function createVerticalBarChart(containerId, data, options = {}) {
                 const categoryClass = generationData.categories && generationData.categories[categoryIndex] ? 
                     generationData.categories[categoryIndex].class : 'centennial';
                 
-                bar.className = `vertical-bar ${categoryClass}`;
+                bar.className = `vertical-bar`;
+                
+                // Aplicar el color directamente
+                const colorMap = {
+                    'color-1': '#87ceeb',
+                    'color-2': '#000080',
+                    'color-3': '#ffa500',
+                    'color-4': '#800080',
+                    'color-5': '#ffc0cb',
+                    'color-6': '#32cd32',
+                    'centennial': '#4285f4',
+                    'millennial': '#ea4335',
+                    'generacion-x': '#fbbc04'
+                };
+                
+                bar.style.backgroundColor = colorMap[categoryClass] || '#4285f4';
                 
                 const height = (value / yAxisMax) * 250;
                 bar.style.height = `${height}px`;
@@ -274,7 +300,22 @@ function createVerticalBarChart(containerId, data, options = {}) {
             legendItem.className = 'vertical-legend-item';
             
             const colorBox = document.createElement('div');
-            colorBox.className = `vertical-legend-color ${category.class}`;
+            colorBox.className = 'vertical-legend-color';
+            
+            // Mapear colores directamente
+            const colorMap = {
+                'color-1': '#87ceeb',
+                'color-2': '#000080',
+                'color-3': '#ffa500',
+                'color-4': '#800080',
+                'color-5': '#ffc0cb',
+                'color-6': '#32cd32',
+                'centennial': '#4285f4',
+                'millennial': '#ea4335',
+                'generacion-x': '#fbbc04'
+            };
+            
+            colorBox.style.backgroundColor = colorMap[category.class] || '#4285f4';
             
             const text = document.createElement('div');
             text.className = 'vertical-legend-text';
@@ -336,24 +377,24 @@ function initializeAllCharts() {
             name: 'Centennial',
             values: [25.45, 74.55],
             categories: [
-                { label: 'No', class: 'centennial' },
-                { label: 'Sí', class: 'millennial' }
+                { label: 'No', class: 'color-1' },
+                { label: 'Sí', class: 'color-2' }
             ]
         },
         {
             name: 'Millennial',
             values: [22.22, 77.78],
             categories: [
-                { label: 'No', class: 'centennial' },
-                { label: 'Sí', class: 'millennial' }
+                { label: 'No', class: 'color-1' },
+                { label: 'Sí', class: 'color-2' }
             ]
         },
         {
             name: 'Generación X',
             values: [37.14, 62.86],
             categories: [
-                { label: 'No', class: 'centennial' },
-                { label: 'Sí', class: 'millennial' }
+                { label: 'No', class: 'color-1' },
+                { label: 'Sí', class: 'color-2' }
             ]
         }
     ];
@@ -404,24 +445,24 @@ function initializeAllCharts() {
             name: 'Centennial',
             values: [22.22, 21.43],
             categories: [
-                { label: 'No', class: 'centennial' },
-                { label: 'Sí', class: 'millennial' }
+                { label: 'No', class: 'color-1' },
+                { label: 'Sí', class: 'color-2' }
             ]
         },
         {
             name: 'Millennial',
             values: [11.11, 17.46],
             categories: [
-                { label: 'No', class: 'centennial' },
-                { label: 'Sí', class: 'millennial' }
+                { label: 'No', class: 'color-1' },
+                { label: 'Sí', class: 'color-2' }
             ]
         },
         {
             name: 'Generación X',
             values: [13.49, 14.29],
             categories: [
-                { label: 'No', class: 'centennial' },
-                { label: 'Sí', class: 'millennial' }
+                { label: 'No', class: 'color-1' },
+                { label: 'Sí', class: 'color-2' }
             ]
         }
     ];
